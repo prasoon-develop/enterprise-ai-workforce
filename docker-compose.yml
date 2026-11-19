@@ -1,0 +1,43 @@
+services:
+  ai-engine:
+    build:
+      context: ./ai-engine-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./ai-engine-service/.env
+    networks:
+      - enterprise-net
+
+  secure-core:
+    build:
+      context: ./secure-core-service
+    ports:
+      - "8080:8080"
+    networks:
+      - enterprise-net
+
+  gateway:
+    build:
+      context: ./gateway-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - secure-core
+      - ai-engine
+    networks:
+      - enterprise-net
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+    networks:
+      - enterprise-net
+
+networks:
+  enterprise-net:
+    driver: bridge

@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TaskLog {
+  id          String   @id @default(uuid())
+  taskId      String   @unique
+  userId      String
+  prompt      String
+  auditStatus String
+  aiOutput    Json
+  createdAt   DateTime @default(now())
+}
